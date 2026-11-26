@@ -955,6 +955,7 @@ main>section{counter-increment:sec}
 /* light mode: avatar blue for the name and the two hero buttons */
 :root[data-theme="light"] .hero h1 .nm{background:linear-gradient(100deg,#4E62A6 0%,#6C82BB 45%,#5FA8CC 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 #gboard{z-index:48}
+#moreBtn[aria-expanded=true] svg{transform:rotate(180deg)}
 .paperx-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:24px}
 .paperx-actions .xwrap{margin:0}
 .paperx-actions .xbtn{padding:11px 18px}
@@ -1929,12 +1930,14 @@ setMode(0);
   function apply(){
     cards.forEach((c,i)=>{const inCat=cur==='all'||c.dataset.cat===cur;const folded=cur==='all'&&!expanded&&i>=TOP;c.classList.toggle('hide',!inCat||folded)});
     const hidden=cur==='all'&&!expanded?Math.max(0,cards.length-TOP):0;
-    moreWrap.hidden=!hidden;moreN.textContent=hidden;
+    const showLess=cur==='all'&&expanded&&cards.length>TOP;
+    moreWrap.hidden=!hidden&&!showLess;moreN.textContent=hidden;
+    moreBtn.firstChild.firstChild.textContent=showLess?'Show fewer projects':'Load more projects';moreBtn.setAttribute('aria-expanded',showLess);
   }
   const cats=[['all','Everything'],['agents','LLMs and agents'],['ml','Machine learning'],['vision','Computer vision'],['nlp','NLP and speech'],['data','Data analysis'],['full','Full-stack']];
   cats.filter(([k])=>k==='all'||CASES.some(c=>c.cat===k)).forEach(([k,n],i)=>{const b=document.createElement('button');b.textContent=n;b.setAttribute('aria-pressed',i===0);
     b.onclick=()=>{[...host.children].forEach(x=>x.setAttribute('aria-pressed',x===b));cur=k;apply()};host.appendChild(b)});
-  moreBtn.addEventListener('click',()=>{expanded=true;apply();
+  moreBtn.addEventListener('click',()=>{if(expanded){expanded=false;apply();const w=document.getElementById('work');if(w&&w.getBoundingClientRect().top<0)w.scrollIntoView({behavior:reduce?'auto':'smooth'});return}expanded=true;apply();
     cards.slice(TOP).forEach((c,k)=>{c.classList.add('dealt');c.style.animationDelay=(reduce?0:k*70)+'ms'});
     const next=cards[TOP];if(next)next.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})});
   apply();
@@ -2204,7 +2207,7 @@ addEventListener('touchmove',e=>{const t=e.touches[0];if(t)aimTorch(t.clientX,t.
     if(open)requestAnimationFrame(()=>dispatchEvent(new Event('resize')))}
   function syncFs(){if(!fs)return;const all=btns.every(b=>b.getAttribute('aria-expanded')==='true');fs.setAttribute('aria-pressed',all);fs.classList.toggle('on',all)}
   btns.forEach(b=>b.addEventListener('click',()=>{const open=b.getAttribute('aria-expanded')!=='true';setGroup(b.dataset.x,open);
-    if(!open){const s=b.closest('section');if(s&&s.getBoundingClientRect().top<0)s.scrollIntoView({behavior:reduce?'auto':'smooth'})}syncFs()}));
+    if(!open){const s=b.dataset.x==='paper'?document.getElementById('paper'):b.closest('section');if(s&&s.getBoundingClientRect().top<0)s.scrollIntoView({behavior:reduce?'auto':'smooth'})}syncFs()}));
   function setAll(open){[...new Set(btns.map(b=>b.dataset.x))].forEach(g=>setGroup(g,open));
     if(window.__proj)window.__proj(open);if(window.__skills)window.__skills(open);syncFs();
     try{localStorage.setItem('fullstory',open?'1':'0')}catch(e){}}
