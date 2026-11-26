@@ -25,7 +25,13 @@
 <!-- /share -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&family=Noto+Sans+Devanagari:wght@400&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/recursive-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:400 800;font-stretch:100%;font-display:block;src:url(fonts/bricolage-latin.woff2) format('woff2')}
+@font-face{font-family:'Recursive';font-style:normal;font-weight:300 800;font-display:block;src:url(fonts/recursive-latin.woff2) format('woff2')}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0E2626; --surface:#12302D; --ink:#E6F2EC; --muted:#9DB8AF; --line:#23423D; --acc:#A3EEC6; --em:#A3EEC6; --silver:#A9B4AE; --red:#E07A66; --v1:#6FA8D6; --v2:#BFAE84; --v3:#D98872; --v4:#A497DA; --sage:#7FBF9C; --grid:rgba(228,234,230,.035); --sq:rgba(228,234,230,.03);
